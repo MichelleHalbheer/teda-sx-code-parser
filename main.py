@@ -144,10 +144,23 @@ def main():
         parsed_jxl = etree.ElementTree(sx_job.getroot())
 
         # Create the output file name to be identical to the input one
-        output_path = os.path.join(config['output_path'], os.path.basename(file))
+        filename = os.path.basename(file)
+        output_path = os.path.join(config['output_path'], filename)
         
         # Write the resulting ElementTree to a new Trimble JobXML file
         parsed_jxl.write(output_path, pretty_print=True)
+
+        # Archive parsed file
+        archived = False
+        counter = 0
+        while not archived:
+            # Resolve name collision by appending a running count to the filename
+            try:
+                archive_file = f'{filename[:-4]} ({counter:03}).jxl' if counter > 0 else f'{filename}'
+                os.rename(file, os.path.join(config['archive_path'], archive_file))
+                archived = True
+            except FileExistsError:
+                counter += 1
         
 
 def get_parse_files(dir_input: str) -> list:

@@ -1,5 +1,6 @@
 {
     "input_path": ".\\Input",
     "output_path": ".\\Output",
+    "archive_path": ".\\Archive",
     "line_code_path": "H:\\Software\\rmDATA\\GeoDesigner\\Konfiguration\\Vorlage_Geoterra.csv"
 }
