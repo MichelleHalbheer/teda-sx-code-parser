@@ -17,6 +17,11 @@ import pandas as pd
 import numpy as np
 from lxml import etree
 import json
+import logging
+logging.basicConfig(filename='parser.log', level=logging.DEBUG, 
+                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
+logger=logging.getLogger(__name__)
+
 
 
 ################
@@ -28,7 +33,7 @@ def main():
     # Load the config file
     config_file = open('config.json')
     config = json.load(config_file)
-    
+
     # Load all files that need to be parsed
     parse_files = get_parse_files(config['input_path'])
 
@@ -217,3 +222,4 @@ def get_line_codes(dir_line_codes: str) -> list:
 
 if __name__ == '__main__':
     main()
+
