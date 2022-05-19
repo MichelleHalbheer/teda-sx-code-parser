@@ -1,0 +1,31 @@
+@ECHO OFF
+PUSHD "H:\Software\Trimble_Line_Code_Parser"
+
+@REM REM Read config JSON
+@REM SETLOCAL enabledelayedexpansion
+@REM SET JsonString=
+@REM FOR /F "delims=" %%x IN (config.json) DO (
+@REM 	<nul set /p="%%x"
+@REM 	Echo !var%%a! 
+@REM 	if .!JsonString!==. (
+@REM 		SET JsonString=%%x
+@REM 	) ELSE (
+@REM 		SET JsonString=!JsonString!%%x
+@REM 	)
+@REM )
+
+@REM REM Remove quotes
+@REM SET JsonString=%JsonString:"=%
+@REM REM Remove spaces
+@REM SET JsonString=%JsonString: =%
+@REM REM Remove braces
+@REM SET JsonString=%JsonString:~1,-1%
+@REM REM Change colon for equal sign
+@REM SET JsonString=%JsonString::==%
+@REM REM Make all objects into assignments
+@REM SET "%JsonString:,=" & Set "%"
+
+@REM COPY "%~1" "%input_path%" /-y
+START /WAIT "Trimble Line Code Converter" ".\\Trimble_Line_Code_Converter.exe" "%~1"
+@REM COPY "%output_path%\%~nx1" "%~1" /y
+POPD

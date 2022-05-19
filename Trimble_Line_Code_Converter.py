@@ -4,7 +4,7 @@
 # --- HEADER --- #
 ##################
 __author__ = 'Mike Halbheer'
-__version__ = '0.0.1'
+__version__ = '1.0.0'
 __status__ = 'Development'
 
 
@@ -13,26 +13,27 @@ __status__ = 'Development'
 ###################
 
 import os
+import sys
 import pandas as pd
 import numpy as np
 from lxml import etree
 import json
-import logging
-logging.basicConfig(filename='parser.log', level=logging.DEBUG, 
-                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
-logger=logging.getLogger(__name__)
-
+from shutil import copy
 
 
 ################
 # --- CODE --- #
 ################
 
-def main():
+def main(input_file):
 
     # Load the config file
     config_file = open('config.json')
     config = json.load(config_file)
+
+    # Copy the input file to the input directory
+    if input_file is not None:
+        copy_input_file(input_file, config['input_path'])
 
     # Load all files that need to be parsed
     parse_files = get_parse_files(config['input_path'])
@@ -149,11 +150,16 @@ def main():
         parsed_jxl = etree.ElementTree(sx_job.getroot())
 
         # Create the output file name to be identical to the input one
-        filename = os.path.basename(file)
-        output_path = os.path.join(config['output_path'], filename)
+        filename = '.'.join(os.path.basename(file).split('.')[:-1])
+        result_filename = f'{filename}_rmg.jxl'
+        output_path = os.path.join(config['output_path'], result_filename)
         
         # Write the resulting ElementTree to a new Trimble JobXML file
         parsed_jxl.write(output_path, pretty_print=True)
+
+        if input_file is not None:
+            resulting_path = os.path.join(os.path.dirname(input_file), result_filename)
+            copy_output_file(output_path, resulting_path)
 
         # Archive parsed file
         archived = False
@@ -161,7 +167,7 @@ def main():
         while not archived:
             # Resolve name collision by appending a running count to the filename
             try:
-                archive_file = f'{filename[:-4]} ({counter:03}).jxl' if counter > 0 else f'{filename}'
+                archive_file = f'{filename} ({counter:03}).jxl' if counter > 0 else f'{filename}.jxl'
                 os.rename(file, os.path.join(config['archive_path'], archive_file))
                 archived = True
             except FileExistsError:
@@ -196,6 +202,7 @@ def get_parse_files(dir_input: str) -> list:
 
     return parse_files
 
+
 def get_line_codes(dir_line_codes: str) -> list:
     '''
     Gets all line codes from the current code list
@@ -220,6 +227,48 @@ def get_line_codes(dir_line_codes: str) -> list:
     return line_codes
 
 
+def copy_input_file(input_file:str, input_path:str) -> None:
+    '''
+    Function to copy the input file to the input directory for the rest of the script
+
+    Parameters
+    ----------
+    input_file : String
+        The path of the input file to be copied
+    input_path : String
+        The path to the input directory of the program
+
+    Returns
+    -------
+    None
+    '''
+
+    copy(input_file, input_path)
+
+
+def copy_output_file(output_path:str, resulting_path:str) -> None:
+    '''
+    Function to copy the input file to the input directory for the rest of the script
+
+    Parameters
+    ----------
+    output_path : String
+        The path of the output file created by this program
+    input_path : String
+        The path to the input directory of the program
+
+    Returns
+    -------
+    None
+    '''
+    
+    copy(output_path, resulting_path)
+
+
 if __name__ == '__main__':
-    main()
+    # If system parameter was passed use that, else parse files in the input direcotry
+    if len(sys.argv) > 1:
+        main(sys.argv[1])
+    else:
+        main(None)
 

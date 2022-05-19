@@ -1,0 +1,1 @@
+%SystemRoot%\explorer.exe "F:\ftp_upload_sensor_daten\Trimble Line Code Converter Tmp"

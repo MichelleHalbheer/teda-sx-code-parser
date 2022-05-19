@@ -1,6 +1,7 @@
 {
-    "input_path": ".\\Input",
-    "output_path": ".\\Output",
-    "archive_path": ".\\Archive",
-    "line_code_path": "H:\\Software\\rmDATA\\GeoDesigner\\Konfiguration\\Vorlage_Geoterra.csv"
+    "input_path": "F:\\ftp_upload_sensor_daten\\Trimble Line Code Converter Tmp\\Input",
+    "output_path": "F:\\ftp_upload_sensor_daten\\Trimble Line Code Converter Tmp\\Output",
+    "archive_path": "F:\\ftp_upload_sensor_daten\\Trimble Line Code Converter Tmp\\Archive",
+    "line_code_path": "H:\\Software\\rmDATA\\GeoDesigner\\Konfiguration\\Vorlage_Geoterra.csv",
+    "converter_path": "H:\\Software\\Trimble_Line_Code_Parser"
 }
